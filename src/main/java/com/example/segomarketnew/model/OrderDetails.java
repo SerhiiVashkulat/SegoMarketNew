@@ -15,10 +15,8 @@ import java.math.BigDecimal;
 @Builder
 @Table(name = "orders_details")
 public class OrderDetails {
-    private static final String SEQ_NAME = "order_details_seq";
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_NAME)
-    @SequenceGenerator(name = SEQ_NAME, sequenceName = SEQ_NAME,allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "order_id")
