@@ -25,8 +25,13 @@ public class UserController {
 
     @PostMapping("/new")
     public String newUser(UserDto userDto, Model model){
-        if (userService.save(userDto))return "redirect:/";
+        if (userService.save(userDto))return "redirect:/users";
         else model.addAttribute("user", userDto);
         return "user";
+    }
+    @GetMapping()
+    public String userList(Model model){
+        model.addAttribute("users", userService.getAll());
+        return "userList";
     }
 }
