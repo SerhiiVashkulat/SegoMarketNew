@@ -1,7 +1,7 @@
 package com.example.segomarketnew.mapper;
 
 import com.example.segomarketnew.dto.ProductDto;
-import com.example.segomarketnew.model.Product;
+import com.example.segomarketnew.domain.model.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

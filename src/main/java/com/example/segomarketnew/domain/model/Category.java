@@ -1,4 +1,4 @@
-package com.example.segomarketnew.model;
+package com.example.segomarketnew.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

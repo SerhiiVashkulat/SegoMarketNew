@@ -1,19 +1,17 @@
 package com.example.segomarketnew.service.serviceImpl;
 
 import com.example.segomarketnew.dto.UserDto;
-import com.example.segomarketnew.model.Role;
-import com.example.segomarketnew.model.User;
+import com.example.segomarketnew.domain.model.Role;
+import com.example.segomarketnew.domain.model.User;
 import com.example.segomarketnew.repository.UserRepository;
 import com.example.segomarketnew.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;

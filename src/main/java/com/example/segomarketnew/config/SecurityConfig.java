@@ -1,6 +1,6 @@
 package com.example.segomarketnew.config;
 
-import com.example.segomarketnew.model.Role;
+import com.example.segomarketnew.domain.model.Role;
 import com.example.segomarketnew.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +26,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig  {
     private  UserService userService;
 
+
    @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
@@ -47,7 +48,7 @@ public class SecurityConfig  {
     }
     @Bean
    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.authorizeHttpRequests()
                     .antMatchers("/users").hasAnyAuthority(Role.MANAGER.name(),Role.ADMIN.name())
                     .antMatchers("/users/new").hasAuthority(Role.ADMIN.name())
                     .anyRequest().permitAll()

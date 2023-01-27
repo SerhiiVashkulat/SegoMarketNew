@@ -19,8 +19,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private static final String SECRET_KEY = "3272357538782F413F4428472B4B6150645367566B5970337336763979244226";
-    public String extractUsername(String jwtToken) {
-        return extractClaim(jwtToken,Claims::getSubject);
+    public String extractUsername(String token) {
+        return extractClaim(token,Claims::getSubject);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolve){
@@ -41,7 +41,7 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-    public String generatedToken(Map<String, Object> extractClaims, UserDetails userDetails){
+    private String generatedToken(Map<String, Object> extractClaims, UserDetails userDetails){
         return Jwts.builder()
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
