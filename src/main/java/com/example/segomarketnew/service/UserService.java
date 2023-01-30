@@ -1,7 +1,8 @@
 package com.example.segomarketnew.service;
 
+import com.example.segomarketnew.domain.model.User;
 import com.example.segomarketnew.dto.UserDto;
-import org.springframework.security.core.userdetails.User;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;

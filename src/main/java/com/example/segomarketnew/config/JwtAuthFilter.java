@@ -2,11 +2,13 @@ package com.example.segomarketnew.config;
 
 import com.example.segomarketnew.service.serviceImpl.JwtService;
 import com.example.segomarketnew.service.UserService;
+import com.example.segomarketnew.service.serviceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,7 +27,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private String userName;
     private String jwtToken;
     private  final JwtService jwtService;
-    private  UserService userService;
+
+    private UserServiceImpl userService;
     @Autowired
     public JwtAuthFilter(JwtService jwtService) {
         this.jwtService = jwtService;
