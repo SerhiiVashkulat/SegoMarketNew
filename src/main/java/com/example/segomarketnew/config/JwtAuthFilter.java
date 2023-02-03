@@ -1,9 +1,7 @@
 package com.example.segomarketnew.config;
 
 import com.example.segomarketnew.service.serviceImpl.JwtService;
-import com.example.segomarketnew.service.UserService;
-import com.example.segomarketnew.service.serviceImpl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,33 +20,28 @@ import java.io.IOException;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
-    private String authHeader;
-    private String userName;
-    private String jwtToken;
-    private  final JwtService jwtService;
 
-    private UserServiceImpl userService;
-    @Autowired
-    public JwtAuthFilter(JwtService jwtService) {
-        this.jwtService = jwtService;
-
-    }
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-            authHeader = request.getHeader(AUTHORIZATION);
+        final String authHeader = request.getHeader(AUTHORIZATION);;
+        final   String userName;
+        final   String jwtToken;
         if (authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request,response);
             return;
         }
         jwtToken = authHeader.substring(7);
         userName = jwtService.extractUsername(jwtToken);
-        if (userName == null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.loadUserByUsername(userName);
+        if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
             if (jwtService.isTokenValid(jwtToken, userDetails)){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails

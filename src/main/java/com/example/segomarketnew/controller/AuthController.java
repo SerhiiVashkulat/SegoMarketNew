@@ -3,6 +3,7 @@ package com.example.segomarketnew.controller;
 import com.example.segomarketnew.domain.request.AuthRequest;
 import com.example.segomarketnew.domain.request.RegisterRequest;
 import com.example.segomarketnew.domain.response.AuthResponse;
+import com.example.segomarketnew.dto.UserDto;
 import com.example.segomarketnew.service.serviceImpl.AuthService;
 import com.example.segomarketnew.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,13 @@ public class AuthController {
 
     @PostMapping("/registration")
     public ResponseEntity<AuthResponse> registration(@RequestBody RegisterRequest request){
-    log.info("Start reg endpoint");
+        log.info("Start reg endpoint");
         validationUtil.validation(request);
         return ResponseEntity.ok(authService.register(request));
     }
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request){
-
+        validationUtil.validation(request);
         return ResponseEntity.ok(authService.authenticate(request));
     }
 

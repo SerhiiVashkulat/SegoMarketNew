@@ -1,4 +1,4 @@
-package com.example.segomarketnew.controllerAdvice;
+package com.example.segomarketnew.controllerAdvice.Exception;
 
 import com.example.segomarketnew.domain.Code.Code;
 import lombok.Builder;

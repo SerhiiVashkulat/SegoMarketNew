@@ -1,6 +1,6 @@
 package com.example.segomarketnew.util;
 
-import com.example.segomarketnew.controllerAdvice.CommonException;
+import com.example.segomarketnew.controllerAdvice.Exception.CommonException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
