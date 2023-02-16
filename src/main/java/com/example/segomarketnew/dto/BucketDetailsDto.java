@@ -15,15 +15,15 @@ import java.math.BigDecimal;
 public class BucketDetailsDto {
     private String title;
     private Long productId;
-    private BigDecimal price;
-    private BigDecimal amount;
+    private double price;
+    private double amount;
     private Double sum;
 
     public BucketDetailsDto(Product product) {
         this.title = product.getTitle();
         this.productId = product.getId();
         this.price = product.getPrice();
-        this.amount = new BigDecimal(1.0);
-        this.sum = Double.valueOf(product.getPrice().toString());
+        this.amount = 1.0;
+        this.sum =product.getPrice();
     }
 }

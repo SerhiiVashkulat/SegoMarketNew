@@ -22,9 +22,25 @@ public class Bucket {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToMany
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    }, fetch = FetchType.LAZY)
     @JoinTable(name = "buckets_products",
     joinColumns = @JoinColumn(name = "bucket_id"),
     inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> products;
+
+    public void removeProductById(Long id){
+        Product product = this.products.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
+        if (product != null){
+                this.products.remove(product);
+        }
+    }
+    public void removeAll(){
+        products.removeAll(products);
+    }
 }

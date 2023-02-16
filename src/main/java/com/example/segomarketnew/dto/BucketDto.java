@@ -13,13 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BucketDto {
-    private int amountProducts;
+    private long amountProducts;
     private Double sum;
-    private List<BucketDetailsDto> bucketDetailsDto = new ArrayList<>();
+    private List<BucketDetailsDto> bucketDetails = new ArrayList<>();
 
-    public void infoBucket(){
-        this.amountProducts = bucketDetailsDto.size();
-        this.sum = bucketDetailsDto.stream()
+    public Double infoBucket(){
+        this.amountProducts = bucketDetails.size();
+         return this.sum = bucketDetails.stream()
                 .map(BucketDetailsDto::getSum)
                 .mapToDouble(Double::doubleValue)
                 .sum();

@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
         User user = userRepository.findByName(name)
                 .orElseThrow(() -> new RuntimeException("User not found" + name));
         Bucket bucket = user.getBucket();
-        if (productId > productRepository.findAll().size()){
+        if (productId > productRepository.findAll().size() + 1){
             throw new RuntimeException("Unable to find product");
         }
         if (bucket == null){
@@ -47,5 +47,6 @@ public class ProductServiceImpl implements ProductService {
         }
 
     }
+
 
 }

@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,8 +54,9 @@ public class AuthService {
 
         public AuthResponse authenticate(@NonNull AuthRequest request){
 
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getName(),
+           Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getName(),
                     request.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             User user = userRepository.findByName(request.getName())
                     .orElseThrow();
             var jwtToken = jwtService.generatedToken(user);
@@ -64,7 +67,14 @@ public class AuthService {
 
         }
         private void checkCredentials(RegisterRequest request){
-            if (userRepository.existsByNameAndEmail(request.getName(), request.getEmail())){
+            if (userRepository.existsByName(request.getName())){
+                throw CommonException.builder()
+                        .code(Code.BAD_CREDENTIALS)
+                        .message("Nickname or Email is busy")
+                        .httpStatus(HttpStatus.IM_USED)
+                        .build();
+            }
+            if (userRepository.existsByEmail(request.getEmail())){
                 throw CommonException.builder()
                         .code(Code.BAD_CREDENTIALS)
                         .message("Nickname or Email is busy")

@@ -8,4 +8,5 @@ import java.util.List;
 public interface ProductService {
     List<Product> getAll();
     void addProductToUserBucket(Long productId, String name);
+
 }

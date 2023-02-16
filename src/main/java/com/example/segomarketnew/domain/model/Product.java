@@ -1,15 +1,13 @@
 package com.example.segomarketnew.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
+
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -20,10 +18,26 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private BigDecimal price;
+    private Double price;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "products_categories",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
 }
