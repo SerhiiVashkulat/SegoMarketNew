@@ -3,7 +3,7 @@ package com.example.segomarketnew.domain.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
+
 import java.util.List;
 
 

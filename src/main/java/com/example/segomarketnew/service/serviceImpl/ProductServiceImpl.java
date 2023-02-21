@@ -1,5 +1,6 @@
 package com.example.segomarketnew.service.serviceImpl;
 
+
 import com.example.segomarketnew.domain.model.Bucket;
 import com.example.segomarketnew.domain.model.Product;
 import com.example.segomarketnew.domain.model.User;
@@ -7,12 +8,9 @@ import com.example.segomarketnew.repository.ProductRepository;
 import com.example.segomarketnew.repository.UserRepository;
 import com.example.segomarketnew.service.BucketService;
 import com.example.segomarketnew.service.ProductService;
-import com.example.segomarketnew.service.UserService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 @Service
@@ -28,6 +26,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAll() {
         return productRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public void addProductToShop(Product product) {
+        if (productRepository.existsByTitle(product.getTitle())){
+            throw new RuntimeException("Product is already adding");
+        }
+        productRepository.save(product);
     }
 
     @Override

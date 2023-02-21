@@ -1,10 +1,10 @@
 package com.example.segomarketnew.service;
 
 import com.example.segomarketnew.domain.model.Bucket;
-import com.example.segomarketnew.domain.model.Product;
+
 import com.example.segomarketnew.domain.model.User;
 import com.example.segomarketnew.dto.BucketDto;
-import com.example.segomarketnew.repository.BucketRepository;
+
 
 import java.util.List;
 

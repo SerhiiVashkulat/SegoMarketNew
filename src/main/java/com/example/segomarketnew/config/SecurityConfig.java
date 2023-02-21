@@ -1,7 +1,8 @@
 package com.example.segomarketnew.config;
 
-import com.example.segomarketnew.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.example.segomarketnew.domain.model.Role;
+import com.example.segomarketnew.security.JwtAuthFilter;
+import com.example.segomarketnew.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +16,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,23 +24,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true,jsr250Enabled = true)
 
 public class SecurityConfig  {
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final JwtAuthFilter jwtAuthFilter;
 
     @Autowired
-    public SecurityConfig(UserRepository userRepository, @Lazy JwtAuthFilter jwtAuthFilter) {
-        this.userRepository = userRepository;
+    public SecurityConfig(@Lazy UserService userService, @Lazy JwtAuthFilter jwtAuthFilter) {
+        this.userService = userService;
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
+
     @Bean
     public AuthenticationManager authenticationManager(@NonNull AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
@@ -49,7 +44,7 @@ public class SecurityConfig  {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setUserDetailsService(userService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
@@ -63,8 +58,9 @@ public class SecurityConfig  {
     http
             .csrf().disable()
             .authorizeHttpRequests()
-            .antMatchers("/api/v1/auth/**")
-            .permitAll()
+            .antMatchers("/products").permitAll()
+            .antMatchers("/api/v1/auth/**").permitAll()
+            .antMatchers("/users/manager").hasAuthority(Role.ADMIN.name())
             .anyRequest()
             .authenticated()
             .and()

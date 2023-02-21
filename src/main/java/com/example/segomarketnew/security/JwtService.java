@@ -1,4 +1,4 @@
-package com.example.segomarketnew.service.serviceImpl;
+package com.example.segomarketnew.security;
 
 
 import io.jsonwebtoken.Claims;

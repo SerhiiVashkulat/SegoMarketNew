@@ -5,7 +5,6 @@ import com.example.segomarketnew.dto.ProductDto;
 import com.example.segomarketnew.mapper.ProductMapper;
 import com.example.segomarketnew.service.BucketService;
 import com.example.segomarketnew.service.ProductService;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +36,12 @@ public class ProductController {
                     .massage("Add product to bucket " + principal.getName())
                     .build(), HttpStatus.OK);
         }
+        @PostMapping
+    ResponseEntity<Response> addProductsToShop(@RequestBody ProductDto productDto){
 
-
+        productService.addProductToShop(mapper.toProduct(productDto));
+        return new ResponseEntity<>(Response.builder()
+                .massage("Adding product " + productDto.getTitle() + " to shop.")
+                .build(), HttpStatus.OK);
+        }
 }

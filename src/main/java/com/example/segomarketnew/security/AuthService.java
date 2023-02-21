@@ -1,4 +1,4 @@
-package com.example.segomarketnew.service.serviceImpl;
+package com.example.segomarketnew.security;
 
 import com.example.segomarketnew.controllerAdvice.Exception.CommonException;
 import com.example.segomarketnew.domain.Code.Code;
@@ -7,7 +7,6 @@ import com.example.segomarketnew.domain.model.User;
 import com.example.segomarketnew.domain.request.AuthRequest;
 import com.example.segomarketnew.domain.request.RegisterRequest;
 import com.example.segomarketnew.domain.response.AuthResponse;
-import com.example.segomarketnew.dto.UserDto;
 import com.example.segomarketnew.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +41,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
                 .role(Role.CLIENT)
+                .active(true)
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generatedToken(user);
@@ -67,14 +66,7 @@ public class AuthService {
 
         }
         private void checkCredentials(RegisterRequest request){
-            if (userRepository.existsByName(request.getName())){
-                throw CommonException.builder()
-                        .code(Code.BAD_CREDENTIALS)
-                        .message("Nickname or Email is busy")
-                        .httpStatus(HttpStatus.IM_USED)
-                        .build();
-            }
-            if (userRepository.existsByEmail(request.getEmail())){
+            if (userRepository.existsByNameOrEmail(request.getName(), request.getEmail())){
                 throw CommonException.builder()
                         .code(Code.BAD_CREDENTIALS)
                         .message("Nickname or Email is busy")
