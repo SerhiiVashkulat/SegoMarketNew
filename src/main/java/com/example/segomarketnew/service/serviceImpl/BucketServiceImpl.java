@@ -1,8 +1,6 @@
 package com.example.segomarketnew.service.serviceImpl;
 
-import com.example.segomarketnew.domain.model.Bucket;
-import com.example.segomarketnew.domain.model.Product;
-import com.example.segomarketnew.domain.model.User;
+import com.example.segomarketnew.domain.model.*;
 import com.example.segomarketnew.dto.BucketDetailsDto;
 import com.example.segomarketnew.dto.BucketDto;
 import com.example.segomarketnew.repository.BucketRepository;
@@ -12,6 +10,7 @@ import com.example.segomarketnew.service.BucketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,21 +24,24 @@ public class BucketServiceImpl implements BucketService {
     private final BucketRepository bucketRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final OrderServiceImpl orderService;
 
+    private User checkUser(String name){
+      return userRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("User not found") );
+    }
 
     @Override
     public void deleteAllProductFromBucket(String name) {
-        User user = userRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("User not found") );
+        User user = checkUser(name);
         Bucket bucket = user.getBucket();
-        bucket.removeAll();
+        bucket.getProducts().clear();
         bucketRepository.save(bucket);
     }
 
     @Override
     public void deleteProductByIdFromBucket(Long productId, String name){
-        User user = userRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("User not found") );
+        User user = checkUser(name);
         Bucket bucket = user.getBucket();
         bucket.removeProductById(productId);
         bucketRepository.save(bucket);
@@ -57,9 +59,7 @@ public class BucketServiceImpl implements BucketService {
 
     @Override
     public BucketDto getBucketByUser(String name) {
-        User user = userRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("User not found") );
-
+        User user = checkUser(name);
         BucketDto bucketDto = new BucketDto();
         Map<Long, BucketDetailsDto> mapProductId = new HashMap<>();
         List<Product> productList = user.getBucket().getProducts();
@@ -75,6 +75,33 @@ public class BucketServiceImpl implements BucketService {
         bucketDto.setBucketDetails(new ArrayList<>(mapProductId.values()));
         bucketDto.infoBucket();
         return bucketDto;
+    }
+
+    @Override
+    @Transactional
+    public void commitBucketToOrder(String name, String address) {
+        User user = checkUser(name);
+        Bucket bucket = user.getBucket();
+        if (bucket == null || bucket.getProducts().isEmpty()){
+            throw new RuntimeException("Bucket is empty");
+        }
+        Order order = new Order();
+        order.setStatus(OrderStatus.NEW);
+        order.setUser(user);
+        Map<Product,Long> productWithAmount = bucket.getProducts().stream()
+                .collect(Collectors.groupingBy(product -> product,Collectors.counting()));
+        List<OrderDetails> orderDetails = productWithAmount.entrySet().stream()
+                .map(p -> new OrderDetails(order,p.getKey(),p.getValue()))
+                .collect(Collectors.toList());
+        BigDecimal total = new BigDecimal(orderDetails.stream()
+                .map(detail -> detail.getPrice().multiply(detail.getAmount()))
+                .mapToDouble(BigDecimal::doubleValue).sum());
+        order.setDetails(orderDetails);
+        order.setSum(total);
+        order.setAddress(address);
+        orderService.saveOrder(order);
+        bucket.getProducts().clear();
+        bucketRepository.save(bucket);
     }
 
     @Override

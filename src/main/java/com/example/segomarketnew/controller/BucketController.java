@@ -1,9 +1,11 @@
 package com.example.segomarketnew.controller;
 
 
+import com.example.segomarketnew.domain.model.Order;
 import com.example.segomarketnew.domain.response.Response;
 import com.example.segomarketnew.dto.BucketDto;
 import com.example.segomarketnew.service.BucketService;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,5 +47,15 @@ public class BucketController {
                 .massage("Delete " + id + " product from bucket " + principal.getName())
                 .build()
                 ,HttpStatus.OK);
+    }
+    @PostMapping()
+
+    ResponseEntity<Response> commitBucket(@RequestBody String address,Principal principal){
+        if (principal != null){
+            bucketService.commitBucketToOrder(principal.getName(), address);
+        }
+        return new ResponseEntity<>(Response.builder()
+                .massage("Your order has been accepted, please wait for a call from the manager")
+                .build(),HttpStatus.ACCEPTED);
     }
 }

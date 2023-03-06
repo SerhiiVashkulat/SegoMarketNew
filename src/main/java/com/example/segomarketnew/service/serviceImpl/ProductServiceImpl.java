@@ -23,10 +23,12 @@ public class ProductServiceImpl implements ProductService {
     private final BucketService bucketService;
 
 
+
     @Override
     public List<Product> getAll() {
         return productRepository.findAll();
     }
+
 
     @Override
     @Transactional
@@ -42,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
         User user = userRepository.findByName(name)
                 .orElseThrow(() -> new RuntimeException("User not found" + name));
         Bucket bucket = user.getBucket();
-        if (productId > productRepository.findAll().size() + 1){
+        if (productId > productRepository.findAll().size() || productId <= 0){
             throw new RuntimeException("Unable to find product");
         }
         if (bucket == null){
@@ -52,8 +54,6 @@ public class ProductServiceImpl implements ProductService {
         }else {
             bucketService.addProduct(bucket,Collections.singletonList(productId));
         }
-
     }
-
 
 }

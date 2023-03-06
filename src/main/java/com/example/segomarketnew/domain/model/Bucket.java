@@ -40,7 +40,5 @@ public class Bucket {
                 this.products.remove(product);
         }
     }
-    public void removeAll(){
-        products.removeAll(products);
-    }
+
 }

@@ -8,6 +8,7 @@ import com.example.segomarketnew.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -20,6 +21,7 @@ public class ProductController {
     private final ProductService productService;
     private final BucketService bucketService;
     private final ProductMapper mapper = ProductMapper.mapper;
+
 
 
     @GetMapping
@@ -36,9 +38,9 @@ public class ProductController {
                     .massage("Add product to bucket " + principal.getName())
                     .build(), HttpStatus.OK);
         }
+        @PreAuthorize("hasAuthority('MANAGER')")
         @PostMapping
     ResponseEntity<Response> addProductsToShop(@RequestBody ProductDto productDto){
-
         productService.addProductToShop(mapper.toProduct(productDto));
         return new ResponseEntity<>(Response.builder()
                 .massage("Adding product " + productDto.getTitle() + " to shop.")

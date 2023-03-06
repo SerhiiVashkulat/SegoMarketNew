@@ -1,9 +1,7 @@
 package com.example.segomarketnew.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,7 +10,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -31,9 +30,10 @@ public class Order {
     private User user;
     private BigDecimal sum;
     private String address;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     private List<OrderDetails> details;
     @Enumerated(EnumType.STRING)
+
     private OrderStatus status;
 
 }
