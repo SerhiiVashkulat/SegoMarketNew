@@ -19,10 +19,10 @@ public class ErrorControllerAdvice {
                 .build(),exception.getHttpStatus());
     }
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity <Error> handleUserException(RuntimeException exception) {
+    public ResponseEntity <Error> handleException(RuntimeException exception) {
         return new ResponseEntity<>(Error.builder()
                 .message(exception.getMessage())
-                .build(),HttpStatus.NOT_FOUND );
+                .build(),HttpStatus.BAD_REQUEST );
     }
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Error> handleBadCredentialsException(BadCredentialsException ex){

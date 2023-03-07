@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
 
 @RestController
 @RequestMapping("order")
@@ -33,29 +33,29 @@ public class OrderController {
         List<OrderDto> list = new ArrayList<>();
       for (int i = 0; i < orderList.size() ; i++){
           list.add(OrderDto.builder()
-                          .status(orderList.get(i).getStatus())
-                          .products(orderDetailsMapper.toListDto(orderList.get(i).getDetails()))
-                          .id(orderList.get(i).getId())
-                          .address(orderList.get(i).getAddress())
-                                  .updated(orderList.get(i).getUpdated())
-                                          .sum(orderList.get(i).getSum()).
+                  .status(orderList.get(i).getStatus())
+                  .products(orderDetailsMapper.toListDto(orderList.get(i).getDetails()))
+                  .id(orderList.get(i).getId())
+                  .address(orderList.get(i).getAddress())
+                  .updated(orderList.get(i).getUpdated())
+                  .sum(orderList.get(i).getSum()).
                   build());
       }
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<OrderDto> checkOrderUserById(@PathVariable Long id){
+    ResponseEntity<OrderDto> checkOrderById(@PathVariable Long id){
         OrderDto orderDto = orderMapper.toDto(orderService.statusOrder(id));
        orderDto.setProducts( orderDetailsMapper.toListDto(orderService.statusOrder(id).getDetails()));
         return ResponseEntity.ok(orderDto);
     }
     @PreAuthorize("hasAuthority('MANAGER')")
-    @PostMapping("/{id}")
-    ResponseEntity<Response> changeOrderStatus(@RequestBody String orderStatus,
+    @PutMapping ("/{id}")
+    ResponseEntity<Response> changeOrderStatus(@RequestBody OrderStatus orderStatus,
                                                @PathVariable Long id){
 
-        orderService.changeStatusOrder(id,OrderStatus.valueOf(orderStatus.toUpperCase(Locale.ROOT)));
+        orderService.changeStatusOrder(id,orderStatus);
         return new ResponseEntity(Response.builder()
                 .massage("Order status number " + id + " change to " + orderStatus)
                 .build(), HttpStatus.ACCEPTED);

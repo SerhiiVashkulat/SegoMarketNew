@@ -34,6 +34,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void changeStatusOrder(Long id,OrderStatus status) {
+        if (!orderRepository.existsOrderById(id)){
+            throw new RuntimeException("Order not found ");
+        }
         Order order = orderRepository.findOrderById(id);
         order.setStatus(status);
         saveOrder(order);
