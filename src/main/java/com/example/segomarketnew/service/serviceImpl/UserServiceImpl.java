@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUserManager(User user) {
-        if (userRepository.existsByNameOrEmail(user.getName(), user.getEmail())){
+        if (userRepository.existsByNameOrEmail(user.getName(), user.getEmail())) {
             throw CommonException.builder()
                     .code(Code.BAD_CREDENTIALS)
                     .message("Nickname or Email is busy")
@@ -51,22 +51,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-       return userRepository.findAll();
+        return userRepository.findAll();
     }
 
     @Override
     public void updateUserEmailOrPassword(User user) {
         User userUpdate = userRepository.findByName(user.getUsername())
-                .orElseThrow(()-> new RuntimeException(" User "+ user.getName()+ " not found"));
+                .orElseThrow(() -> new RuntimeException(" User " + user.getName() + " not found"));
         boolean changed = false;
-        if (user.getPassword() != null && !user.getPassword().isEmpty()){
+        if (user.getEmail() == null && user.getPassword() == null) {
+            throw new RuntimeException("Need credential for update your profile");
+        }
+        if (Objects.equals(user.getEmail(), userUpdate.getEmail())){
+            throw new RuntimeException("Email must be different to change it");
+        }
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
             userUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
             changed = true;
         }
-        if (!Objects.equals(user.getEmail(),userUpdate.getEmail()) && user.getEmail() !=null){
+        if ( user.getEmail() != null) {
             userUpdate.setEmail(user.getEmail());
             changed = true;
         }
-        if (changed)userRepository.save(user);
+        if (changed) {
+            userRepository.save(userUpdate);
+        }
     }
 }

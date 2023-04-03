@@ -35,7 +35,7 @@ public class Bucket {
         Product product = this.products.stream()
                 .filter(p -> p.getId() == id)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException("Product not found"));
         if (product != null){
                 this.products.remove(product);
         }

@@ -24,12 +24,14 @@ public class AuthController {
 
     @PostMapping("/registration")
     public ResponseEntity<AuthResponse> registration(@RequestBody RegisterRequest request){
-        log.info("Start reg endpoint");
+        log.info("START endpoint registration request: {}",request);
         validationUtil.validation(request);
         return ResponseEntity.ok(authService.register(request));
+
     }
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request){
+        log.info("End endpoint authenticate request: {}",request);
         validationUtil.validation(request);
         return ResponseEntity.ok(authService.authenticate(request));
     }

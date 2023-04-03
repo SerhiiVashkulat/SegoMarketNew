@@ -46,7 +46,7 @@ public class AuthService {
         userRepository.save(user);
         var jwtToken = jwtService.generatedToken(user);
         return AuthResponse.builder()
-                .message(jwtToken)
+                .message(" Token : " + jwtToken)
                 .httpStatus(HttpStatus.ACCEPTED)
                 .build();
     }
@@ -60,7 +60,7 @@ public class AuthService {
                     .orElseThrow();
             var jwtToken = jwtService.generatedToken(user);
             return AuthResponse.builder()
-                    .message(jwtToken)
+                    .message(" Token : " + jwtToken)
                     .httpStatus(HttpStatus.OK)
                     .build();
 

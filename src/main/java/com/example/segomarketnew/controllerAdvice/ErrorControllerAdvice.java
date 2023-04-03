@@ -5,6 +5,7 @@ import com.example.segomarketnew.controllerAdvice.Exception.Error;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -30,6 +31,14 @@ public class ErrorControllerAdvice {
                 .message(ex.getMessage())
                 .build(),HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Error> handlerMethodArgumentNotValidException(MethodArgumentNotValidException exception){
+        return new ResponseEntity<>(Error.builder()
+                        .message("Email or password not valid")
+                .build(),HttpStatus.BAD_REQUEST );
+    }
+
 
 
 }

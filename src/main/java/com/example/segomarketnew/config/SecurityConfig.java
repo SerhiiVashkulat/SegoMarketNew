@@ -60,7 +60,6 @@ public class SecurityConfig  {
             .authorizeHttpRequests()
             .antMatchers("/products").permitAll()
             .antMatchers("/api/v1/auth/**").permitAll()
-            .antMatchers("/users/manager").hasAuthority(Role.ADMIN.name())
             .anyRequest()
             .authenticated()
             .and()

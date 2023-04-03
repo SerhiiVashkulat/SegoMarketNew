@@ -35,6 +35,9 @@ public class BucketServiceImpl implements BucketService {
     public void deleteAllProductFromBucket(String name) {
         User user = checkUser(name);
         Bucket bucket = user.getBucket();
+        if (bucket.getProducts().isEmpty()){
+            throw new RuntimeException("Bucket is empty");
+        }
         bucket.getProducts().clear();
         bucketRepository.save(bucket);
     }
@@ -43,6 +46,9 @@ public class BucketServiceImpl implements BucketService {
     public void deleteProductByIdFromBucket(Long productId, String name){
         User user = checkUser(name);
         Bucket bucket = user.getBucket();
+        if (bucket.getProducts().isEmpty()){
+            throw new RuntimeException("Bucket is empty");
+        }
         bucket.removeProductById(productId);
         bucketRepository.save(bucket);
     }
@@ -63,6 +69,9 @@ public class BucketServiceImpl implements BucketService {
         BucketDto bucketDto = new BucketDto();
         Map<Long, BucketDetailsDto> mapProductId = new HashMap<>();
         List<Product> productList = user.getBucket().getProducts();
+        if (productList.isEmpty()){
+            throw new RuntimeException("Bucket is empty");
+        }
         for (Product product: productList) {
             BucketDetailsDto detailsDto = mapProductId.get(product.getId());
             if (detailsDto == null){
