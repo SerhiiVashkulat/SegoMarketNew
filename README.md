@@ -57,12 +57,12 @@ GetMapping http://localhost:8080/api/v1/products
 Доступ мають усі користувачі
 
 PostMapping
-
+{
 "name":"user",
 "password":"12345678",
 "email":"example@mail.ua",
 "matchingPassword" : "12345678"
-
+}
 Валідація данних
 
 username >= 4 символа, <= 15 символів, дозволені символи A-Za-z\d._-
@@ -87,10 +87,10 @@ password >=8 символа, <=100, дозволені символи A-Za-z\d.,
 Авторизація 
 
 PostMapping
-
+{
 "name":"user1",
 "password":"12345678"
-
+}
 Валідація данних
 
 Не може бути пустим логін чи пароль
@@ -113,10 +113,10 @@ PostMapping
 PutMapping
 
 Token : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNjgwNTA5MTAyLCJleHAiOjI0MTk5MzMxMDc1MjY1NjB9.8ML_I9RpHv4TBPxQ9QM3xmBYMwp5XEOdwzkQc94laqk
-
+{
 "email":"example2@mail.com",
 "password":"123456789"
-
+}
 Валідація данних
 
 @Email
